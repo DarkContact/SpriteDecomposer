@@ -134,6 +134,8 @@ Interface::Interface(QWidget *parent) :
     connect(m_workarea,SIGNAL(itemSelected(Cut*)),this,SLOT(itemSelected(Cut*)));
     connect(m_workarea,SIGNAL(multipleSelection()),this,SLOT(multipleSelection()));
 
+    connect(ui->animation_TextEdit_Path, SIGNAL(returnPressed()), this, SLOT(setPrefixForFilename()));
+
     /*
      * Interface
      */
@@ -655,6 +657,10 @@ void Interface::frameCountUpdated(int frameCount)
     ui->animation_I_Image->setText(QString::number(frameCount));
 }
 
+void Interface::setPrefixForFilename() {
+    ui->animation_TextEdit_Path->setText(QFileDialog::getExistingDirectory(this, "Directory with game data"));
+}
+
 /*
  * Private
  */
@@ -709,7 +715,8 @@ void Interface::saveAll(const QString &filename)
     QDomDocument doc;
     QDomElement root = doc.createElement("sprites");
 
-    root.setAttribute("image",m_imageFilename.split("/").last());
+    QDir directoryGameData(ui->animation_TextEdit_Path->text());
+    root.setAttribute("image", directoryGameData.relativeFilePath(m_imageFilename));
     root.setAttribute("transparentColor", "#" + ui->picker_I_Color->text());
     doc.appendChild(root);
 
@@ -784,7 +791,7 @@ void Interface::openXMl(const QString &filename)
     }
 
     // Set background
-    openImage(dirPath + "/" + root.attribute("image"),false);
+    openImage(dirPath + "/" + root.attribute("image").split('/').last(), false);
 
     // Animations
     QDomNode n = root.firstChild();

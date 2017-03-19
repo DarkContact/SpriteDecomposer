@@ -114,6 +114,8 @@ public slots:
     // Animation
     void frameCountUpdated(int frameCount);
 
+    void setPrefixForFilename();
+
 private:
     Ui::Interface *ui;              // Interface
     QList<Animation*> m_animations; // Animations List
