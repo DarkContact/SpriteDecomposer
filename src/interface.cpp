@@ -710,7 +710,7 @@ void Interface::saveAll(const QString &filename)
     QDomElement root = doc.createElement("sprites");
 
     root.setAttribute("image",m_imageFilename.split("/").last());
-    root.setAttribute("transparentColor",ui->picker_I_Color->text());
+    root.setAttribute("transparentColor", "#" + ui->picker_I_Color->text());
     doc.appendChild(root);
 
     // temp
@@ -823,7 +823,9 @@ void Interface::openXMl(const QString &filename)
     }
 
     // Set Transparent
-    ui->picker_I_Color->setText(root.attribute("transparentColor"));
+    QString colorWithSharp = root.attribute("transparentColor");
+    colorWithSharp.remove(0, 1);
+    ui->picker_I_Color->setText(colorWithSharp);
     picker_SetMaskColor();
 
     file.close();
