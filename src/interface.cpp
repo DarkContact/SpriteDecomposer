@@ -717,7 +717,11 @@ void Interface::saveAll(const QString &filename)
 
     QDir directoryGameData(ui->animation_TextEdit_Path->text());
     root.setAttribute("image", directoryGameData.relativeFilePath(m_imageFilename));
-    root.setAttribute("transparentColor", "#" + ui->picker_I_Color->text());
+    QString colorText = ui->picker_I_Color->text();
+    if (!colorText.isEmpty()) {
+        colorText.push_front('#');
+    }
+    root.setAttribute("transparentColor", colorText);
     doc.appendChild(root);
 
     // temp
