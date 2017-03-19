@@ -98,6 +98,7 @@ Interface::Interface(QWidget *parent) :
     // configMark
     connect(ui->mark_I_Orientation,SIGNAL(currentIndexChanged(int)),this,SLOT(mark_OrientationChange(int)));
     connect(ui->mark_B_Add,SIGNAL(clicked()),this,SLOT(addMark()));
+    connect(ui->mark_B_Delete, SIGNAL(clicked()), m_workarea, SLOT(clearMarks()));
 
     // configPicker
     connect(ui->picker_B_ColorPicker,SIGNAL(clicked()),this,SLOT(picker_OpenColorPicker()));

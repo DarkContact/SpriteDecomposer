@@ -462,6 +462,13 @@ Mark* WorkArea::addMark(int position, Mark::MarkOrientation orientation)
     return mark;
 }
 
+void WorkArea::clearMarks() {
+    foreach (auto& mark, m_marks) {
+        this->removeItem(mark);
+    }
+    m_marks.clear();
+}
+
 void WorkArea::deleteCut(Cut *cut)
 {
     m_animation->deleteCut(cut);

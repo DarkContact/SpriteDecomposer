@@ -162,6 +162,7 @@ public slots:
 
     void deleteSelection();
 
+    void clearMarks();
 };
 
 #endif // WORKAREA_H
