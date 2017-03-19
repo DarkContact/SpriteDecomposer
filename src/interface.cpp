@@ -144,7 +144,13 @@ Interface::Interface(QWidget *parent) :
      */
     fillLanguages();
     retranslate();
-    m_languages->actions().first()->toggle();
+    for (auto const& lang : m_languages->actions()) {
+        if (lang->text() == "English") {
+            lang->toggle();
+            setLanguage(lang);
+            break;
+        }
+    }
 }
 
 Interface::~Interface()
