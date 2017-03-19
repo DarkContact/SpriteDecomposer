@@ -351,6 +351,7 @@ void Interface::tool_cutAuto()
 // Menu
 void Interface::menu_open()
 {
+    tool_normal();
     // Document opened must be saved
     if(m_workModified && !m_imageFilename.isEmpty())
     {
@@ -503,6 +504,7 @@ void Interface::mark_OrientationChange(int index)
         ui->mark_I_X->clear();
         ui->mark_L_X->setEnabled(false);
 
+        m_currentToolSelected = ui->toolMark;
         m_workarea->setTool(WorkArea::ToolMarkH);
 
         this->setCursor(Qt::ArrowCursor);
@@ -516,6 +518,7 @@ void Interface::mark_OrientationChange(int index)
         ui->mark_I_X->setEnabled(true);
         ui->mark_L_X->setEnabled(true);
 
+        m_currentToolSelected = ui->toolMark;
         m_workarea->setTool(WorkArea::ToolMarkV);
 
         this->setCursor(Qt::ArrowCursor);
