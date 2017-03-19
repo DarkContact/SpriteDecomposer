@@ -64,14 +64,8 @@ void WorkArea::setTool(WorkArea::Tool tool)
 
 void WorkArea::setAnimation(Animation *animation)
 {
-    // Remove previous animation items
-    if(m_animation)
-    {
-        for(int i=0; i < m_animation->cuts()->size(); i++)
-        {
-            removeItem(m_animation->cuts()->at(i));
-        }
-    }
+    // Remove previous animation items 
+    //NOTE Remove memory clear, because crash application
 
     m_animation = animation;
     if(animation)
