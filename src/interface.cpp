@@ -52,7 +52,6 @@ Interface::Interface(QWidget *parent) :
     connect(ui->toolZoomIn,SIGNAL(triggered()),this,SLOT(tool_zoomIn()));
     connect(ui->toolZoomOut,SIGNAL(triggered()),this,SLOT(tool_zoomOut()));
     connect(ui->toolCutRect,SIGNAL(triggered()),this,SLOT(tool_cutRect()));
-    connect(ui->toolCutGrid,SIGNAL(triggered()),this,SLOT(tool_cutGrid()));
     connect(ui->toolMark,SIGNAL(triggered()),this,SLOT(tool_mark()));
     connect(ui->toolPicker,SIGNAL(triggered()),this,SLOT(tool_picker()));
     connect(ui->toolCutAuto,SIGNAL(triggered()),this,SLOT(tool_cutAuto()));
@@ -72,23 +71,6 @@ Interface::Interface(QWidget *parent) :
     connect(ui->cutRect_B_Add,SIGNAL(clicked()),this,SLOT(addCutRect()));
     connect(ui->cutRect_I_Magnetism,SIGNAL(toggled(bool)),m_workarea,SLOT(toggledMagnet(bool)));
     connect(ui->cutRect_B_Remove,SIGNAL(clicked()),m_workarea,SLOT(deleteSelection()));
-
-    // configCutGrid
-    connect(ui->cutGrid_I_Width,SIGNAL(valueChanged(int)),m_workarea,SLOT(setItemWidth(int)));
-    connect(ui->cutGrid_I_Height,SIGNAL(valueChanged(int)),m_workarea,SLOT(setItemHeight(int)));
-    connect(ui->cutGrid_I_X,SIGNAL(valueChanged(int)),m_workarea,SLOT(setItemX(int)));
-    connect(ui->cutGrid_I_Y,SIGNAL(valueChanged(int)),m_workarea,SLOT(setItemY(int)));
-    connect(ui->cutGrid_I_Row,SIGNAL(valueChanged(int)),m_workarea,SLOT(setItemRow(int)));
-    connect(ui->cutGrid_I_Column,SIGNAL(valueChanged(int)),m_workarea,SLOT(setItemColumn(int)));
-    connect(ui->cutGrid_B_Add,SIGNAL(clicked()),this,SLOT(addCutGrid()));
-    connect(ui->cutGrid_I_Magnetism,SIGNAL(toggled(bool)),m_workarea,SLOT(toggledMagnet(bool)));
-    connect(ui->cutGrid_B_Remove,SIGNAL(clicked()),m_workarea,SLOT(deleteSelection()));
-    connect(ui->cutGrid_I_CellHeight,SIGNAL(valueChanged(int)),m_workarea,SLOT(setItemCellHeight(int)));
-    connect(ui->cutGrid_I_CellWidth,SIGNAL(valueChanged(int)),m_workarea,SLOT(setItemCellWidth(int)));
-
-    // Link configCutGrid & configCutRect
-    connect(ui->cutGrid_I_Magnetism,SIGNAL(toggled(bool)),ui->cutRect_I_Magnetism,SLOT(setChecked(bool)));
-    connect(ui->cutRect_I_Magnetism,SIGNAL(toggled(bool)),ui->cutGrid_I_Magnetism,SLOT(setChecked(bool)));
 
     // configCutAuto
     connect(ui->cutAuto_I_Tolerance,SIGNAL(valueChanged(int)),m_workarea,SLOT(changeTolerance(int)));
@@ -254,29 +236,7 @@ void Interface::tool_cutRect()
         m_currentToolSelected->setChecked(true);
     }
 }
-void Interface::tool_cutGrid()
-{
-    // Switch tool
-    if(m_currentToolSelected != ui->toolCutGrid)
-    {
-        // Interface
-        m_currentToolSelected->setChecked(false);
-        m_currentToolSelected = ui->toolCutGrid;
-        ui->configurePanel->setCurrentIndex(1);
-        this->setCursor(Qt::CrossCursor);
 
-        // WorkArea
-        m_workarea->setTool(WorkArea::ToolCutGrid);
-
-        // StatsBar
-        ui->statusBar->showMessage(trUtf8("Ajouter un découpage en grille"));
-    }
-    // Already selected
-    else
-    {
-        m_currentToolSelected->setChecked(true);
-    }
-}
 void Interface::tool_mark()
 {
     // Switch tool
@@ -424,11 +384,6 @@ void Interface::configurePanelChanged(int index)
         ui->toolCutRect->setChecked(true);
         tool_cutRect();
         break;
-        // Cut Grid
-    case 1:
-        ui->toolCutGrid->setChecked(true);
-        tool_cutGrid();
-        break;
         // Mark
     case 2:
         ui->toolMark->setChecked(true);
@@ -455,23 +410,12 @@ void Interface::addCutRect()
         m_workModified = true; setWindowModified(true);
     }
 }
-void Interface::addCutGrid()
-{
-    if(ui->toolCutGrid->isEnabled() && !m_imageFilename.isEmpty())
-    {
-        m_workarea->addCut(QRectF(ui->cutGrid_I_X->value(),ui->cutGrid_I_Y->value(),ui->cutGrid_I_Width->value(),ui->cutGrid_I_Height->value()),WorkArea::TypeCutGrid);
-        m_workModified = true; setWindowModified(true);
-    }
-}
 void Interface::cut_GeometryChange()
 {
     Cut *from = qobject_cast<Cut*>(sender());
     if(!from) return;
 
-    if(from->row() > 1 || from->column() > 1)
-        showCutGridInfo(from);
-    else
-        showCutRectInfo(from);
+    showCutRectInfo(from);
 
     m_workModified = true; setWindowModified(true);
 }
@@ -629,16 +573,8 @@ void Interface::pickerColor(QRgb color)
 void Interface::itemSelected(Cut *selection)
 {
     if(!selection) return;
-    if(selection->row() > 1 || selection->column() > 1)
-    {
-        ui->configurePanel->setCurrentIndex(1);
-        showCutGridInfo(selection);
-    }
-    else
-    {
-        ui->configurePanel->setCurrentIndex(0);
-        showCutRectInfo(selection);
-    }
+    ui->configurePanel->setCurrentIndex(0);
+    showCutRectInfo(selection);
 }
 void Interface::multipleSelection()
 {
@@ -898,19 +834,6 @@ void Interface::showCutRectInfo(Cut *cut)
     ui->cutRect_I_Height->setValue(cut->boundingRect().height());
     ui->cutRect_I_X->setValue(cut->x());
     ui->cutRect_I_Y->setValue(cut->y());
-}
-void Interface::showCutGridInfo(Cut *cut)
-{
-    ui->cutGrid_I_Width->setValue(cut->boundingRect().width());
-    ui->cutGrid_I_Width->setSingleStep(cut->column());
-    ui->cutGrid_I_Height->setValue(cut->boundingRect().height());
-    ui->cutGrid_I_Height->setSingleStep(cut->row());
-    ui->cutGrid_I_X->setValue(cut->x());
-    ui->cutGrid_I_Y->setValue(cut->y());
-    ui->cutGrid_I_Row->setValue(cut->row());
-    ui->cutGrid_I_Column->setValue(cut->column());
-    ui->cutGrid_I_CellWidth->setValue(cut->cellWidth());
-    ui->cutGrid_I_CellHeight->setValue(cut->cellHeight());
 }
 
 void Interface::closeAll()

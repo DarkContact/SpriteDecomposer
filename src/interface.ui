@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1002</width>
+    <width>1006</width>
     <height>810</height>
    </rect>
   </property>
@@ -25,7 +25,16 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <property name="margin">
+    <property name="leftMargin">
+     <number>5</number>
+    </property>
+    <property name="topMargin">
+     <number>5</number>
+    </property>
+    <property name="rightMargin">
+     <number>5</number>
+    </property>
+    <property name="bottomMargin">
      <number>5</number>
     </property>
     <item row="0" column="0">
@@ -71,8 +80,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1002</width>
-     <height>22</height>
+     <width>1006</width>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -136,7 +145,6 @@
    </attribute>
    <addaction name="toolNormal"/>
    <addaction name="toolCutRect"/>
-   <addaction name="toolCutGrid"/>
    <addaction name="toolMark"/>
    <addaction name="toolPicker"/>
    <addaction name="toolCutAuto"/>
@@ -148,7 +156,7 @@
    <property name="minimumSize">
     <size>
      <width>315</width>
-     <height>285</height>
+     <height>290</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -171,7 +179,16 @@
    </attribute>
    <widget class="QWidget" name="dockToolsContents">
     <layout class="QGridLayout" name="gridLayout_3">
-     <property name="margin">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
       <number>0</number>
      </property>
      <item row="0" column="0">
@@ -346,262 +363,6 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="configureCutGrid">
-        <attribute name="icon">
-         <iconset resource="menu.qrc">
-          <normaloff>:/icons/grid-icon.png</normaloff>:/icons/grid-icon.png</iconset>
-        </attribute>
-        <attribute name="title">
-         <string/>
-        </attribute>
-        <attribute name="toolTip">
-         <string>Découpage en grille</string>
-        </attribute>
-        <layout class="QGridLayout" name="gridLayout_4">
-         <item row="0" column="0" colspan="2">
-          <widget class="QCheckBox" name="cutGrid_I_Magnetism">
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="text">
-            <string>Magnétisme</string>
-           </property>
-           <property name="icon">
-            <iconset resource="menu.qrc">
-             <normaloff>:/icons/magnet-icon.png</normaloff>:/icons/magnet-icon.png</iconset>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="cutGrid_L_Row">
-           <property name="text">
-            <string>Ligne</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QSpinBox" name="cutGrid_I_Row">
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="value">
-            <number>3</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QLabel" name="cutGrid_L_Column">
-           <property name="text">
-            <string>Colonne</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <widget class="QSpinBox" name="cutGrid_I_Column">
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="value">
-            <number>3</number>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0" colspan="4">
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <widget class="QLabel" name="cutGrid_L_Cell">
-             <property name="font">
-              <font>
-               <pointsize>13</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Cellules</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="cutGrid_L_CellWidth">
-             <property name="text">
-              <string>L</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="cutGrid_I_CellWidth">
-             <property name="readOnly">
-              <bool>false</bool>
-             </property>
-             <property name="maximum">
-              <number>9999</number>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="cutGrid_L_CellHeight">
-             <property name="text">
-              <string>H</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="cutGrid_I_CellHeight">
-             <property name="readOnly">
-              <bool>false</bool>
-             </property>
-             <property name="buttonSymbols">
-              <enum>QAbstractSpinBox::UpDownArrows</enum>
-             </property>
-             <property name="maximum">
-              <number>9999</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="3" column="0" colspan="4">
-          <widget class="Line" name="line">
-           <property name="frameShadow">
-            <enum>QFrame::Sunken</enum>
-           </property>
-           <property name="lineWidth">
-            <number>2</number>
-           </property>
-           <property name="midLineWidth">
-            <number>1</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0" colspan="4">
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QLabel" name="cutGrid_L_W">
-             <property name="text">
-              <string>L</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="cutGrid_I_Width">
-             <property name="maximum">
-              <number>99999</number>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="cutGrid_L_H">
-             <property name="text">
-              <string>H</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="cutGrid_I_Height">
-             <property name="maximum">
-              <number>99999</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="5" column="0" colspan="4">
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QLabel" name="cutGrid_L_X">
-             <property name="text">
-              <string>X</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="cutGrid_I_X">
-             <property name="buttonSymbols">
-              <enum>QAbstractSpinBox::UpDownArrows</enum>
-             </property>
-             <property name="maximum">
-              <number>99999</number>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="cutGrid_L_Y">
-             <property name="text">
-              <string>Y</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="cutGrid_I_Y">
-             <property name="maximum">
-              <number>99999</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="6" column="0" colspan="2">
-          <widget class="QPushButton" name="cutGrid_B_Add">
-           <property name="text">
-            <string>Ajouter</string>
-           </property>
-           <property name="icon">
-            <iconset resource="menu.qrc">
-             <normaloff>:/icons/Add-Green-Button-icon.png</normaloff>:/icons/Add-Green-Button-icon.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="2" colspan="2">
-          <widget class="QPushButton" name="cutGrid_B_Remove">
-           <property name="text">
-            <string>Supprimer</string>
-           </property>
-           <property name="icon">
-            <iconset resource="menu.qrc">
-             <normaloff>:/icons/Minus-Red-Button-icon.png</normaloff>:/icons/Minus-Red-Button-icon.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="2">
-          <spacer name="cutGrid_PushUp">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>11</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </widget>
        <widget class="QWidget" name="configureCutAuto">
         <attribute name="icon">
          <iconset resource="menu.qrc">
@@ -755,7 +516,16 @@
          <string>Repère</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_5">
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item row="0" column="0" colspan="3">
@@ -1660,7 +1430,16 @@
    </attribute>
    <widget class="QWidget" name="dockAnimationContents">
     <layout class="QGridLayout" name="gridLayout_8">
-     <property name="margin">
+     <property name="leftMargin">
+      <number>5</number>
+     </property>
+     <property name="topMargin">
+      <number>5</number>
+     </property>
+     <property name="rightMargin">
+      <number>5</number>
+     </property>
+     <property name="bottomMargin">
       <number>5</number>
      </property>
      <item row="0" column="0" colspan="3">
@@ -1814,7 +1593,16 @@
    </attribute>
    <widget class="QWidget" name="dockSequenceContents">
     <layout class="QGridLayout" name="gridLayout_9">
-     <property name="margin">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
       <number>0</number>
      </property>
      <item row="0" column="0" colspan="4">
@@ -1968,21 +1756,6 @@
    </property>
    <property name="shortcut">
     <string>R</string>
-   </property>
-  </action>
-  <action name="toolCutGrid">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="menu.qrc">
-     <normaloff>:/icons/grid-icon.png</normaloff>:/icons/grid-icon.png</iconset>
-   </property>
-   <property name="text">
-    <string>Sélection Grille</string>
-   </property>
-   <property name="shortcut">
-    <string>G</string>
    </property>
   </action>
   <action name="toolMark">
