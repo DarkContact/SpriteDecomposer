@@ -68,6 +68,7 @@ public slots:
     void tool_zoomIn();
     void tool_zoomOut();
     void tool_cutRect();
+    void tool_cutGrid();
     void tool_mark();
     void tool_picker();
     void tool_cutAuto();
@@ -84,6 +85,7 @@ public slots:
 
     // configureCut
     void addCutRect();
+    void addCutGrid();
     void cut_GeometryChange();
 
     // configureMark
@@ -133,6 +135,7 @@ private:
     Animation* addAnimation(const QString &title);
     void removeAnimation(int index);
     void showCutRectInfo(Cut* cut);
+    void showCutGridInfo(Cut* cut);
     void closeAll();
 
     // Translation
