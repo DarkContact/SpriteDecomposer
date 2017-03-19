@@ -67,7 +67,7 @@ void WorkArea::setAnimation(Animation *animation)
     // Remove previous animation items
     if(m_animation)
     {
-        for(int i=0;i<m_animation->cuts()->size();i++)
+        for(int i=0; i < m_animation->cuts()->size(); i++)
         {
             removeItem(m_animation->cuts()->at(i));
         }

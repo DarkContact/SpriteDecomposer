@@ -12,6 +12,12 @@ Interface::Interface(QWidget *parent) :
      * Initialisation
      */
 
+    m_settings = new QFile("Settings.txt");
+    if (m_settings->open(QFile::ReadOnly)) {
+        m_lastDir = m_settings->readLine();
+        m_settings->close();
+    }
+
     // Center Window on Screen
     QRect frect = frameGeometry();
     frect.moveCenter(QDesktopWidget().availableGeometry().center());
@@ -155,6 +161,10 @@ Interface::Interface(QWidget *parent) :
 
 Interface::~Interface()
 {
+    if (m_settings->open(QFile::WriteOnly)) {
+        m_settings->write(m_lastDir.toStdString().c_str());
+        m_settings->close();
+    }
     delete ui;
 }
 
@@ -348,7 +358,14 @@ void Interface::menu_open()
     }
 
     // Open file
-    QString filename = QFileDialog::getOpenFileName(this,trUtf8("Ouvrir un fichier"),"",trUtf8("Tous les fichiers(*.*);;Fichier image (*.png *.jpg *.bmp *.gif);;Fichier XML(*.xml)")); //*/"/Users/Nicolas/Pictures/Resources/Sprite/NessSBBB.png";
+    QString filename = QFileDialog::getOpenFileName(this,
+                                                    trUtf8("Ouvrir un fichier"),
+                                                    m_lastDir,
+                                                    trUtf8("Tous les fichiers(*.*);;Fichier image (*.png *.jpg *.bmp *.gif);;Fichier XML(*.xml)"));
+
+    if (!filename.isEmpty()) {
+        m_lastDir = QDir(filename).path();
+    }
 
     if(!filename.isEmpty())
     {
@@ -376,7 +393,14 @@ void Interface::menu_save()
 }
 void Interface::menu_saveAs()
 {
-    QString saveFile = QFileDialog::getSaveFileName(this,trUtf8("Enregistrer sous..."),QString(),trUtf8("Fichier XML(*.xml)"));
+    QString saveFile = QFileDialog::getSaveFileName(this,
+                                                    trUtf8("Enregistrer sous..."),
+                                                    m_lastDir,
+                                                    trUtf8("Fichier XML(*.xml)"));
+    if (!saveFile.isEmpty()) {
+        m_lastDir = QDir(saveFile).path();
+    }
+
     saveAll(saveFile);
 }
 
@@ -668,6 +692,8 @@ int Interface::saveModification()
 
 void Interface::saveAll(const QString &filename)
 {
+    qSetGlobalQHashSeed(42);
+
     QFile file(filename);
     if(!file.open(QFile::WriteOnly))
     {
@@ -676,7 +702,7 @@ void Interface::saveAll(const QString &filename)
     }
 
     // Creation du fichier XML
-    QDomDocument doc("SpriteDecomposer");
+    QDomDocument doc;
     QDomElement root = doc.createElement("sprites");
 
     root.setAttribute("image",m_imageFilename.split("/").last());
@@ -693,16 +719,14 @@ void Interface::saveAll(const QString &filename)
         animationElm.setAttribute("title",animation->title());
         animationElm.setAttribute("delay",animation->speed());
 
-        for(int j=0;j<animation->cuts()->size();j++)
+        for(int j=0; j < animation->cuts()->size(); j++)
         {
            cut = animation->cuts()->at(j);
-           QDomElement cutElm = doc.createElement("cut");
-           cutElm.setAttribute("x",cut->x());
-           cutElm.setAttribute("y",cut->y());
-           cutElm.setAttribute("w",cut->width());
-           cutElm.setAttribute("h",cut->height());
-           cutElm.setAttribute("row",cut->row());
-           cutElm.setAttribute("col",cut->column());
+           QDomElement cutElm = doc.createElement("rect");
+           cutElm.setAttribute("x", cut->x());
+           cutElm.setAttribute("y", cut->y());
+           cutElm.setAttribute("width", cut->width());
+           cutElm.setAttribute("height", cut->height());
 
            animationElm.appendChild(cutElm);
         }
@@ -716,6 +740,8 @@ void Interface::saveAll(const QString &filename)
     m_xmlFilename = filename;
     setWindowModified(false);
     m_workModified = false;
+
+    qSetGlobalQHashSeed(-1);
 }
 
 void Interface::openXMl(const QString &filename)
@@ -729,9 +755,12 @@ void Interface::openXMl(const QString &filename)
 
     QString dirPath;
     QStringList fileDir = filename.split("/");
-    for(int i=0;i<fileDir.size()-1;i++)
+    for(int i=0; i < fileDir.size()-1; i++)
     {
-        dirPath += "/"+fileDir.at(i);
+        dirPath += "/" + fileDir.at(i);
+    }
+    if (!dirPath.isEmpty() && dirPath[0] == '/') {
+        dirPath.remove(0, 1);
     }
 
     // Ouverture du fichier XML
@@ -769,22 +798,19 @@ void Interface::openXMl(const QString &filename)
             {
                 QDomElement ee = nn.toElement();
                 if(!ee.isNull()
-                    && ee.tagName() == "cut"
+                    && ee.tagName() == "rect"
                     && ee.hasAttribute("x")
                     && ee.hasAttribute("y")
-                    && ee.hasAttribute("w")
-                    && ee.hasAttribute("h")
-                    && ee.hasAttribute("row")
-                    && ee.hasAttribute("col")
+                    && ee.hasAttribute("width")
+                    && ee.hasAttribute("height")
                   )
                 {
-                    m_workarea->setItemRow(ee.attribute("row").toInt());
-                    m_workarea->setItemColumn(ee.attribute("column").toInt());
-
-                    if(ee.attribute("row").toInt() > 1 || ee.attribute("column").toInt() > 1)
-                        m_workarea->addCut(QRectF(ee.attribute("x").toFloat(),ee.attribute("y").toFloat(),ee.attribute("w").toFloat(),ee.attribute("h").toFloat()),WorkArea::TypeCutGrid);
-                    else
-                        m_workarea->addCut(QRectF(ee.attribute("x").toFloat(),ee.attribute("y").toFloat(),ee.attribute("w").toFloat(),ee.attribute("h").toFloat()));
+                    m_workarea->setItemRow(1);
+                    m_workarea->setItemColumn(1);
+                    m_workarea->addCut(QRectF(ee.attribute("x").toFloat(),
+                                              ee.attribute("y").toFloat(),
+                                              ee.attribute("width").toFloat(),
+                                              ee.attribute("height").toFloat()));
                 }
                 nn = nn.nextSibling();
             }
@@ -798,6 +824,8 @@ void Interface::openXMl(const QString &filename)
 
     file.close();
     m_xmlFilename = filename;
+
+    ui->viewer_I_First->clicked();
 }
 
 void Interface::openImage(const QString &filename,bool createDefaultAnimation)

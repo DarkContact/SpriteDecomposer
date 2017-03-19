@@ -143,6 +143,10 @@ private:
     void retranslate();
     QMenu* m_languages;
 
+    //Settings
+    QFile* m_settings;
+    QString m_lastDir;
+
 private slots:
     void selectAnimation(int index);
     void setLanguage(QAction* action);
