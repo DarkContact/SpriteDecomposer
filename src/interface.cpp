@@ -831,9 +831,11 @@ void Interface::openXMl(const QString &filename)
 
     // Set Transparent
     QString colorWithSharp = root.attribute("transparentColor");
-    colorWithSharp.remove(0, 1);
-    ui->picker_I_Color->setText(colorWithSharp);
-    picker_SetMaskColor();
+    if (!colorWithSharp.isEmpty()) {
+        colorWithSharp.remove(0, 1);
+        ui->picker_I_Color->setText(colorWithSharp);
+        picker_SetMaskColor();
+    }
 
     file.close();
     m_xmlFilename = filename;
