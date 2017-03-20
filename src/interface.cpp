@@ -2,6 +2,8 @@
 #include "ui_interface.h"
 #include "application.h"
 
+#include <QXmlStreamWriter>
+
 Interface::Interface(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Interface)
@@ -702,8 +704,6 @@ int Interface::saveModification()
 
 void Interface::saveAll(const QString &filename)
 {
-    qSetGlobalQHashSeed(42);
-
     QFile file(filename);
     if(!file.open(QFile::WriteOnly))
     {
@@ -712,51 +712,46 @@ void Interface::saveAll(const QString &filename)
     }
 
     // Creation du fichier XML
-    QDomDocument doc;
-    QDomElement root = doc.createElement("sprites");
+    QByteArray xmlOutput;
+    QXmlStreamWriter xmlDoc(&xmlOutput);
+    xmlDoc.setAutoFormatting(true);
+    xmlDoc.setAutoFormattingIndent(-1); //Negative for Tabs
+    xmlDoc.setCodec("UTF-8");
+    xmlDoc.writeStartDocument();
 
+    xmlDoc.writeStartElement("sprites");
     QDir directoryGameData(ui->animation_TextEdit_Path->text());
-    root.setAttribute("image", directoryGameData.relativeFilePath(m_imageFilename));
+    xmlDoc.writeAttribute("image", directoryGameData.relativeFilePath(m_imageFilename));
     QString colorText = ui->picker_I_Color->text();
     if (!colorText.isEmpty()) {
         colorText.push_front('#');
     }
-    root.setAttribute("transparentColor", colorText);
-    doc.appendChild(root);
+    xmlDoc.writeAttribute("transparentColor", colorText);
 
-    // temp
-    Animation *animation = 0;
-    Cut *cut = 0;
-    for(int i=0;i<m_animations.size();i++)
-    {
-        animation = m_animations.at(i);
-        QDomElement animationElm = doc.createElement("animation");
-        animationElm.setAttribute("title",animation->title());
-        animationElm.setAttribute("delay",animation->speed());
 
-        for(int j=0; j < animation->cuts()->size(); j++)
-        {
-           cut = animation->cuts()->at(j);
-           QDomElement cutElm = doc.createElement("rect");
-           cutElm.setAttribute("x", cut->x());
-           cutElm.setAttribute("y", cut->y());
-           cutElm.setAttribute("width", cut->width());
-           cutElm.setAttribute("height", cut->height());
-
-           animationElm.appendChild(cutElm);
+    for(auto const& animation : m_animations) {
+        xmlDoc.writeStartElement("animation");
+        xmlDoc.writeAttribute("title", animation->title());
+        xmlDoc.writeAttribute("delay", QString::number(animation->speed()));
+        for(auto const& cut : *animation->cuts()) {
+           xmlDoc.writeStartElement("rect");
+           xmlDoc.writeAttribute("x", QString::number(cut->x(), 'f', 0));
+           xmlDoc.writeAttribute("y", QString::number(cut->y(), 'f', 0));
+           xmlDoc.writeAttribute("width", QString::number(cut->width(), 'f', 0));
+           xmlDoc.writeAttribute("height", QString::number(cut->height(), 'f', 0));
+           xmlDoc.writeEndElement();
         }
-        root.appendChild(animationElm);
+        xmlDoc.writeEndElement();
     }
+    xmlDoc.writeEndElement();
+    xmlDoc.writeEndDocument();
 
-    QTextStream ts( &file );
-    ts << doc.toString();
+    file.write(xmlOutput);
     file.close();
 
     m_xmlFilename = filename;
     setWindowModified(false);
     m_workModified = false;
-
-    qSetGlobalQHashSeed(-1);
 }
 
 void Interface::openXMl(const QString &filename)
