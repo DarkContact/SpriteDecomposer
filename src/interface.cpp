@@ -733,6 +733,7 @@ void Interface::saveAll(const QString &filename)
         xmlDoc.writeStartElement("animation");
         xmlDoc.writeAttribute("title", animation->title());
         xmlDoc.writeAttribute("delay", QString::number(animation->speed()));
+        xmlDoc.writeAttribute("count", QString::number(animation->cuts()->size()));
         for(auto const& cut : *animation->cuts()) {
            xmlDoc.writeStartElement("rect");
            xmlDoc.writeAttribute("x", QString::number(cut->x(), 'f', 0));
