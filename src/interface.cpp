@@ -705,7 +705,7 @@ int Interface::saveModification()
 void Interface::saveAll(const QString &filename)
 {
     QFile file(filename);
-    if(!file.open(QFile::WriteOnly))
+    if(!file.open(QFile::WriteOnly | QFile::Text))
     {
         QMessageBox::critical(this,trUtf8("Erreur"),trUtf8("Impossible d'enregistrer le fichier"));
         return;
