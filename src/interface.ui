@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1006</width>
+    <width>1014</width>
     <height>810</height>
    </rect>
   </property>
@@ -68,7 +68,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1006</width>
+     <width>1014</width>
      <height>20</height>
     </rect>
    </property>
@@ -1821,7 +1821,7 @@
      <item row="4" column="3">
       <widget class="QLineEdit" name="animation_TextEdit_Path">
        <property name="text">
-        <string>D:/Documents/Projects/SDLBasedEngine/Engine/build</string>
+        <string>D:/Documents/Projects/SDLBasedEngine/Game/build</string>
        </property>
       </widget>
      </item>
